@@ -1,11 +1,13 @@
-from tkinter import *
-from tkinter import ttk
-
+from Tkinter import *
+import ttk
+import tkMessageBox
 import Space
 
-class EntryBox:
+class ParticleEntryBox:
 	
 	def __init__(self, master, parentInterface, event):
+		''' A field particle entry box spawned by clicking on a canvas parent widget
+		'''
 		self.master = master
 		self.parentInterface = parentInterface
 		self.event = event
@@ -19,10 +21,18 @@ class EntryBox:
 
 		# config ok button
 		ttk.Button(self.textPrompt, text = 'Ok', command = self.ok).grid(row = 3, column = 0, padx = 3, pady = 3)
+		self.textPrompt.bind('<Return>', self.ok)
 		
 	def ok(self):
-		particle = Space.Particle(Space.Vector(self.event.x, self.event.y), Space.Vector(0, 0), float(self.mass.get()))
-		self.parentInterface.space.addParticle(particle)
+		try:
+			mass = float(self.mass.get())
+		except ValueError:
+			tkMessageBox.showinfo('Value Error', message = 'Your was invalid. \nPlease enter a number')
+			self.textPrompt.destroy()
+			return
+
+		particle = Space.Particle(Space.Vector(self.event.x, self.event.y), Space.Vector(0, 0), mass)
+		self.parentInterface.space.addParticle(particle) 
 		self.textPrompt.destroy()
 		
 		
