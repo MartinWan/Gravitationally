@@ -72,6 +72,6 @@ class Vector:
 	def __str__(self):
 		''' prints vector in < a, b > format
 		'''
-		return '< {}, {} >'.format(self.x, self.y)
+		return '< {}, {} >'.format(round(self.x, 2), round(self.y,2))
 
 	

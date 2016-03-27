@@ -23,15 +23,20 @@ class ParticleEntryBox:
 		ttk.Button(self.textPrompt, text = 'Ok', command = self.ok).grid(row = 3, column = 0, padx = 3, pady = 3)
 		self.textPrompt.bind('<Return>', self.ok)
 		
-	def ok(self):
+	def ok(self, event = None):
 		try:
 			mass = float(self.mass.get())
 		except ValueError:
-			tkMessageBox.showinfo('Value Error', message = 'Your was invalid. \nPlease enter a number')
+			tkMessageBox.showinfo('Value Error', message = 'Your mass was invalid. \nPlease enter a number')
 			self.textPrompt.destroy()
 			return
 
-		particle = Space.Particle(Space.Vector(self.event.x, self.event.y), Space.Vector(0, 0), mass)
+		if mass < 0:
+			tkMessageBox.showinfo('Value Error', message = 'Please enter a positive mass')
+			self.textPrompt.destroy()
+			return			
+
+		particle = Space.Particle( Space.Vector(self.event.x, self.event.y), Space.Vector(0, 0), mass )
 		self.parentInterface.space.addParticle(particle) 
 		self.textPrompt.destroy()
 		

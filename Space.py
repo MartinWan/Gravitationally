@@ -7,7 +7,7 @@ class Error:
 		self.message = message
 
 class Space:
-	''' A set of particles and a time t. 
+	''' A set of particles and a time t. All attributes are private.
 	'''
 	def __init__(self, particles = []):
 		if type(particles) != list:
@@ -16,48 +16,43 @@ class Space:
 			raise Error('All elements of list must be of type "Particle".')
 		self.particles = particles
 		self.t = 0.0
+		self.p = Vector(0, 0)
+
+		for particle in particles:
+			self.p += particle.m * particle.v
 	
 	def evolve(self):
-		''' Update velocities and positions due to mutual gravitation
-			returns dictionary of position changes made to particles
+		''' Update velocities and positions due to mutual gravitation using numerical integration
 		'''
-		dt = 0.05
-		numParticles = len(self.particles)
+		dt = 0.04
 		particleChanges = {}
-		epsilon = 1 # for singularity softening
+		p = Vector(0, 0)
 
-		# update velocities and positions of particles due to mutual gravitation
-		for i in range(numParticles):
-			particle = self.particles[i]
-			otherParticles = self.particles[:i] + self.particles[i + 1:]
+		for particle in self.particles:
 			g = Vector(0, 0)
-			
-			collision = False
+			p += particle.m * particle.v
 
-			# compute gravitaional acceleration g for particle due to other particles
-			for otherParticle in otherParticles:
-				g = Vector(0, 0)
-				R = otherParticle.r - particle.r 
-				if R.length() < 1: # TEST OF TOTALLY INELASTIC COLLISION
-					g = Vector(0, 0)
-					collision = True
-					break
-				g += ( otherParticle.m * R ) / ( R.length() ** 3 + epsilon ) # newton's gravitation with singularity softening
-			
-			# update particle velocity and position
-			if not collision:
-				delta_v = g * dt
-				delta_r = particle.v * dt
-				particle.v += delta_v
-				particle.r += delta_r
-				particleChanges[particle] = delta_r
-			else: # collision
-				#particle.v = Vector(0, 0)
-				particleChanges[particle] = Vector(0, 0)
+			for otherParticle in self.particles:
+				R = otherParticle.r - particle.r
+				if R.length() == 0: # same particle
+					continue
+				elif R.length() < (particle.d + otherParticle.d) / 2: # totally inelastic collision
+					particle.v = ( particle.m * particle.v + otherParticle.m * otherParticle.v ) / ( particle.m + otherParticle.m ) # conservation of momentum
+					particle.m += otherParticle.m
+					particle.d = ( particle.d ** 3 + otherParticle.d ** 3 ) ** (1.0 / 3.0) # new diameter computed using conservation of volume
+					i = self.particles.index(otherParticle)
+					del self.particles[i]
+					continue
 
-		self.t += dt 
-		return particleChanges
-		
+				g += ( otherParticle.m * R ) / ( R.length() ** 3)
+
+			delta_v = g * dt
+			delta_r = particle.v * dt
+			particle.v += delta_v
+			particle.r += delta_r
+
+		self.p = p
+		self.t += dt
 
 	def addParticle(self, particle):
 		''' add new particle to space 
@@ -78,13 +73,10 @@ class Space:
 		self.t = 0.0
 	
 	def __str__(self):
-		s = "Space at t = {} with ... \n".format(self.t)
-		if self.particles:
-			for i in self.particles[0 : -1]: # all particles except last one
-				s += i.__str__()
-				s += "\n"
-			s += self.particles[-1].__str__() # print last one without trailing new line
-		else:
-			s += 'Nothing'
+		s = "Space at t = {} with total momentum p = {} \n".format(self.t, self.p)
+		for particle in self.particles:
+			s += particle.__str__()
+			s += '\n'
+
 		return s		
 		

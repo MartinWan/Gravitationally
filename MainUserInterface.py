@@ -21,7 +21,7 @@ class MainUserInterface:
 						random button
 		'''
 
-		master.title('N-body Simulation')
+		master.title("Martin's N-body Simulation")
 		master.resizable(False, False)
 
 		# create empty space attribute
@@ -33,7 +33,7 @@ class MainUserInterface:
 		self.panedwindow.pack(fill = BOTH, expand = True)
 
 		# config sidebar and canvas
-		self.canvas = Canvas(self.panedwindow, width = 480, height = 320)
+		self.canvas = Canvas(self.panedwindow, width = 800, height = 640, background = 'black')
 		self.sidebar = ttk.Frame(self.panedwindow, width = 150, height = 300)
 		self.panedwindow.add(self.sidebar)
 		self.panedwindow.add(self.canvas)
@@ -48,29 +48,16 @@ class MainUserInterface:
 	def runSimulation(self):
 		''' clear canvas and run simulation
 		'''
-		
 		self.canvas.delete('all')
-		
-		# inititialize dictionary of particle, canvas particle reference pairs 
-		# corresponding to initial position of all particles
-		canvasParticles = {}
-		for particle in self.space.getParticles():
-				oval = self.canvas.create_oval(particle.r.x, particle.r.y, particle.r.x + 3, particle.r.y + 3)
-				self.canvas.itemconfigure(oval, fill = 'black')
-				canvasParticles[particle] = oval	
-				self.canvas.update()
 
-		# get dictionary of particle, position change pairs from space.evolve()
-		# and update canvas particles
-		particlePositionChanges = self.space.evolve()
-		while particlePositionChanges:
+		while True:
+			self.space.evolve()
+			self.canvas.delete('all')
+
 			for particle in self.space.getParticles():
-				dx = particlePositionChanges[particle].x
-				dy = particlePositionChanges[particle].y
-				self.canvas.move(canvasParticles[particle], dx, dy)
-				self.canvas.update()
-
-			particlePositionChanges = self.space.evolve()
+				self.canvas.create_oval(particle.r.x, particle.r.y, particle.r.x + particle.d, particle.r.y + particle.d, fill = 'yellow')
+			
+			self.canvas.update()
 		
 	def canvasPress(self, event):
 		''' Create popup entry box to add new particle onto canvas
@@ -83,18 +70,19 @@ class MainUserInterface:
 		''' run random simulation of n particles
 		'''
 		self.space.clearSpace()
-		n = 20
+		n = 140
 
 		for i in range(n):
-			m = random.uniform(1000, 9000)
-			rx = random.uniform(0, 480) 
-			ry = random.uniform(0, 320) 
-			vx = random.uniform(-2, 2) 
-			vy = random.uniform(-2, 2) 
+			m = random.uniform(100, 200)
+			d = m / 50.0
+			rx = random.uniform(100, 700) 
+			ry = random.uniform(80, 540) 
+			vx = random.uniform(-3, 3) 
+			vy = random.uniform(-3, 3) 
 
 			r = Space.Vector(rx, ry)
 			v = Space.Vector(vx, vy)
-			particle = Space.Particle(r, v, m)
+			particle = Space.Particle(r, v, m, d)
 
 			self.space.addParticle(particle)
 
