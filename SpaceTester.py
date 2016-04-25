@@ -1,24 +1,35 @@
 from Space import *
-import time
 
-r1 = Vector(0, 0)
-v1 = Vector(0, 0)
-m1 = 100
-p1 = Particle(r1, v1, m1)
+'''
+space = Space([])
 
-r2 = Vector(4, 0)
-v2 = Vector(0, 0)
-m2 = 100
-p2 = Particle(r2, v2, m2)
+p1 = Particle(Vector())
+p2 = Particle(Vector(1, 1))
 
-space = Space([p1, p2])
+print space.inSameQuadrant(p1, p2)
+'''
 
-while True:
-	print space
-	space.evolve()
-	time.sleep(1)
-	
+particles = []
+# sw
+for i in range(-2, 2):
+	for j in range(-2, 2):
+		r = Vector(i , j)
+		particles.append(Particle(r))
 
 
+for i in particles:
+	print i
 
+particles.sort(cmp = quadrantOrder)
+print 'SORTED \n \n \n '
 
+for i in particles:
+	print i
+
+'''
+space = Space(particles)
+print space
+
+for i in particles:
+	print i
+'''

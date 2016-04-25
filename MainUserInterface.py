@@ -70,15 +70,15 @@ class MainUserInterface:
 		''' run random simulation of n particles
 		'''
 		self.space.clearSpace()
-		n = 140
+		n = 70
 
 		for i in range(n):
-			m = random.uniform(100, 200)
+			m = random.uniform(100, 250)
 			d = m / 50.0
 			rx = random.uniform(100, 700) 
 			ry = random.uniform(80, 540) 
-			vx = random.uniform(-3, 3) 
-			vy = random.uniform(-3, 3) 
+			vx = random.uniform(-6, 6) 
+			vy = random.uniform(-6, 6) 
 
 			r = Space.Vector(rx, ry)
 			v = Space.Vector(vx, vy)

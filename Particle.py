@@ -10,7 +10,7 @@ class Particle:
 	''' A point particle that exists in space with position and velocity vectors and mass 
 	'''
 	
-	def __init__(self, r, v, m, d = 2.5):
+	def __init__(self, r, v = Vector(0, 0), m = 1.0, d = 2.5):
 		''' Initialize particle with vectors position r, velocity v, mass m and diameter d
 		'''
 		if not isinstance(r, Vector):
