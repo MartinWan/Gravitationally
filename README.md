@@ -21,4 +21,4 @@ The application requires Python2 installed.
 2. Select "Random" on the left pannel
 
 For more information 
-* ![N-body simlations](https://en.wikipedia.org/wiki/N-body_simulation)
+* [N-body simlations (Wikipedia)](https://en.wikipedia.org/wiki/N-body_simulation)
