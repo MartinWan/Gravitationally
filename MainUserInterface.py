@@ -8,7 +8,6 @@ import tkMessageBox
 import ParticleEntryBox
 
 
-
 class MainUserInterface:
 	
 	def __init__(self, master):
@@ -21,7 +20,7 @@ class MainUserInterface:
 						random button
 		'''
 
-		master.title("Martin's N-body Simulation")
+		master.title("Gravitationally")
 		master.resizable(False, False)
 
 		# create empty space attribute
@@ -50,6 +49,7 @@ class MainUserInterface:
 		'''
 		self.canvas.delete('all')
 
+		# animation loop
 		while True:
 			self.space.evolve()
 			self.canvas.delete('all')
@@ -70,7 +70,7 @@ class MainUserInterface:
 		''' run random simulation of n particles
 		'''
 		self.space.clearSpace()
-		n = 70
+		n = 70 
 
 		for i in range(n):
 			m = random.uniform(100, 250)

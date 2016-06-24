@@ -1,41 +1,5 @@
 from Particle import *
 
-def quadrantOrder(particle0, particle1):
-	W = 800 # display size parameters from interface 
-	H = 640
-	
-	# create primed coordinates in quadrants
-	x0 = particle0.r.x - W/2
-	x1 = particle1.r.x - W/2
-	y0 = particle0.r.y - H/2
-	y1 = particle1.r.y - H/2
-
-	particle0quadrant = -1
-	particle1quadrant = -1
-
-	if x0 >= 0 and y0 >= 0:
-		particle0quadrant = 1
-	elif x0 < 0 and y0 >= 0:
-		particle0quadrant = 2
-	elif x0 < 0 and y0 < 0:
-		particle0quadrant = 3
-	elif x0 >= 0 and y0 < 0:
-		particle0quadrant = 4
-
-	if x1 >= 0 and y1 >= 0:
-		particle1quadrant = 1
-	elif x1 < 0 and y1 >= 0:
-		particle1quadrant = 2
-	elif x1 < 0 and y1 < 0:
-		particle1quadrant = 3
-	elif x1 >= 0 and y1 < 0:
-		particle1quadrant = 4
-
-	if particle1quadrant == particle0quadrant:
-		return 0
-	else:
-		return (particle0quadrant - particle1quadrant) / abs(particle0quadrant - particle1quadrant)
-
 class Error:
 	''' Provide exception class for Space with string message
 	'''
@@ -50,26 +14,13 @@ class Space:
 			raise Error('Parameter "particles" illegal.')
 		if not all(isinstance(particle, Particle) for particle in particles):
 			raise Error('All elements of list must be of type "Particle".')
-		
-		
+		self.particles = particles
 		self.t = 0.0
 		self.p = Vector(0, 0)
 
-		# arrange particles into barnes hut tree 
-		'''
-		N = len(particles)
-		for i in range(N):
-			for j in range(i + 1, N):
-				if self.inSameQuadrant(particles[j], particles[i]):
-					particles[i + 1], particles[j] = particles[j], particles[i + 1] #swap(particles[i + 1], particles[j])
-					i = i + 1
-		'''
-		# inititialize total momentum to test accuracy of numerical integration (check momentum conserved)
 		for particle in particles:
 			self.p += particle.m * particle.v
-
-		self.particles = particles
-
+	
 	def evolve(self):
 		''' Update velocities and positions due to mutual gravitation using euler's method
 		'''

@@ -10,7 +10,7 @@ class Vector:
 	''' Allow for vector arithmetic in python
 	'''
 
-	def __init__(self, x = 0.0, y = 0.0):
+	def __init__(self, x, y):
 		''' Initialize vector with numbers x and y
 		'''
 		if type(x) not in (int, float):
